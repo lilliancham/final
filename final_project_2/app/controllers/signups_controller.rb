@@ -19,7 +19,7 @@ class SignupsController < ApplicationController
     @signup.user_id = params[:user_id]
 
     if @signup.save
-      redirect_to "/events", :notice => "Signup created successfully."
+      redirect_to :back, :notice => "Signup created successfully."
     else
       render 'new'
     end
@@ -38,7 +38,7 @@ class SignupsController < ApplicationController
     @signup.user_id = params[:user_id]
 
     if @signup.save
-      redirect_to "/events", :notice => "Signup updated successfully."
+      redirect_to :back, :notice => "Signup updated successfully."
     else
       render 'edit'
     end
@@ -49,6 +49,6 @@ class SignupsController < ApplicationController
 
     @signup.destroy
 
-    redirect_to "/events", :notice => "Signup deleted."
+    redirect_to :back, :notice => "Signup deleted."
   end
 end

@@ -1,20 +1,20 @@
 class EventsController < ApplicationController
   def my_signups
-    @events = current_user.signup_events.where("held_on >= ?", DateTime.now)
+    @events = current_user.signup_events.where("held_on >= ?", DateTime.now).order(:held_on)
   end
 
   def my_past_signups
-      @events = current_user.signup_events.where("held_on < ?", DateTime.now)
+      @events = current_user.signup_events.where("held_on < ?", DateTime.now).order(held_on: :desc)
   end
 
   def past_events
-    @events = Event.where("held_on < ?", DateTime.now)
+    @events = Event.where("held_on < ?", DateTime.now).order(held_on: :desc)
   end
 
   def index
 
     @q = Event.ransack(params[:q])
-    @events = @q.result.where("held_on >= ?", DateTime.now)
+    @events = @q.result.where("held_on >= ?", DateTime.now).order(:held_on)
 
   end
 

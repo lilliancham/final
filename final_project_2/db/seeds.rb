@@ -20,7 +20,7 @@ event_info = [
     :location => "Second City Theater"
 },
 {
-    :image => "https://amycblog.files.wordpress.com/2012/05/pump-room-gang.jpg",
+    :image => "http://41.media.tumblr.com/efac1b9c7b8c88b8a19886ee594ea100/tumblr_mgtya7vTKF1rhpd0ao1_1280.jpg",
     :held_on => 'January 4th 2016 13:00:00 PM',
     :description => "Come elebrate my birthday with me!",
     :capacity => 4,
@@ -28,7 +28,7 @@ event_info = [
     :location => "Pump Room"
 },
 {
-    :image => "https://upload.wikimedia.org/wikipedia/commons/c/c7/Soldier_field_2006.jpg",
+    :image => "http://fantasyrundown.com/wp-content/uploads/2014/04/Soldier-Field-destination360.com_1.jpg",
     :held_on => 'January 24th 2016 14:00:00 PM',
     :description => "Cheer on the Bears!",
     :capacity => 6,

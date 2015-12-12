@@ -5,6 +5,6 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @events = @user.events
+    @events = @user.events.order(:held_on)
   end
 end
