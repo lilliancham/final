@@ -1,0 +1,31 @@
+<div class="page-header">
+<%= search_form_for @q do |f| %>
+  <p class="lead">Narrow results:</p>
+
+  <div class="form-group">
+    <%= f.label :title_or_description_cont, "Title or Description containing" %>
+    <%= f.text_field :title_or_description_cont, :class => "form-control", :placeholder => "Enter a few characters" %>
+  </div>
+
+
+  <%= f.submit :class => "btn btn-primary btn-block" %>
+  <a href="/events" class="btn btn-default btn-block">Clear filters</a>
+  <% end %>
+</div>
+
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <a href="/events/new" class="btn btn-default btn-block">
+      <i class="fa fa-plus"></i>
+    </a>
+
+    <hr>
+  </div>
+</div>
+
+
+
+<%= render @events%>
+
+

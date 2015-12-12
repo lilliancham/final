@@ -1,0 +1,162 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <%=@event.title %> Organized By <%= link_to @event.user.name, "/users/#{@event.user.id}" %>
+        </h3>
+      </div>
+
+      <div class="panel-body">
+
+      <% if @event.image.present? %>
+      <a href="/events/<%= @event.id %>">
+          <img src="<%= @event.image %>" class="img-responsive">
+      </a>
+
+      <% end %>
+
+        <dl class="dl-horizontal">
+
+              <dt>Location</dt>
+              <dd><%= @event.location %></dd>
+
+              <dt>Held on</dt>
+              <dd><%= @event.held_on.strftime('%B %e, %Y at %l:%M%P') %></dd>
+
+              <dt>Description</dt>
+              <dd><%= @event.description %></dd>
+
+        </dl>
+
+        <ul class = "list-group">
+
+          <% signup = Signup.find_by(:event_id => @event.id, :user_id => current_user.id) %>
+
+          <% if signup.present? && @event.held_on >= DateTime.now %>
+            <li class = "list-group-item">
+              <a class="btn btn-default btn-block" href="/delete_signup/<%= signup.id %>" role="button">Cancel Your Reservation</a>
+            </li>
+            <li class ="list-group-item">
+              <%= @event.attendees.count %>
+              <%= @event.attendees.many? ? "people are" : "person is" %> attending this event.
+
+              <% if @event.capacity - @event.attendees.count == 1 %>
+                <%= @event.capacity - @event.attendees.count %> spot remaining!
+              <% else %>
+                <%= @event.capacity - @event.attendees.count %> spots remaining!
+              <% end %>
+            </li>
+
+          <% else %>
+            <% if @event.capacity == @event.attendees.count %>
+            <li class = "list-group-item"> This event is at capacity. </li>
+            <% else %>
+              <% if @event.held_on >= DateTime.now %>
+              <form action="/create_signup" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+                <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+                <input type="hidden" name="event_id" value="<%= @event.id %>">
+                <input type="hidden" name="user_id" value="<%= current_user.id %>">
+                <li class = "list-group-item">
+                  <button class="btn btn-default btn-block"> Sign Up for the Event </button>
+                </li>
+              </form>
+              <% end %>
+
+              <li class = "list-group-item">
+                <% if @event.attendees.any? %>
+                  <%= @event.attendees.count %>
+                  <%= @event.attendees.many? ? "people are" : "person is" %>
+                  attending this event.
+                <% else %>
+                  Be the first to sign up for this event.
+                <% end %>
+
+                <% if @event.capacity - @event.attendees.count == 1 %>
+                  <%= @event.capacity - @event.attendees.count %> spot remaining!
+                <% else %>
+                  <%= @event.capacity - @event.attendees.count %> spots remaining!
+                <% end %>
+              </li>
+            <% end %>
+          <% end %>
+
+          <li class="list-group-item list-group-item-success"> Event Attendees </li>
+            <% @event.attendees.each do |attendee| %>
+          <li class="list-group-item">
+            <a href="/users/<%= attendee.id %>">
+              <%= attendee.name %>
+            </a>
+          </li>
+            <% end %>
+
+        </ul>
+
+            <ul class="media-list">
+
+          <% @event.comments.each do |comment| %>
+          <li class="media">
+            <div class="media-body">
+              <h6 class="media-heading">
+                <%= link_to comment.user.name, "/users/#{comment.user.id}" %>
+                <small>
+                  <%= time_ago_in_words(comment.created_at) %> ago
+                  <% if comment.user == current_user %>
+                    <a href="/delete_comment/<%= comment.id %>">
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  <% end %>
+                </small>
+              </h6>
+              <%= comment.body %>
+            </div>
+          </li>
+          <% end %>
+
+          <li class="media">
+            <div class="media-body">
+              <form action="/create_comment" method="post">
+                <!-- Hidden input for authenticity token to protect from forgery -->
+                <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+                <input type="hidden" name="event_id" value="<%= @event.id %>">
+
+                <input type="hidden" name="user_id" value="<%= current_user.id %>">
+
+                <!-- Label and input for body -->
+                <div class="form-group">
+                  <label for="body" class="sr-only">
+                    Body
+                  </label>
+
+                  <input type="text" id="body" name="body" placeholder="Add a comment..." class="form-control" required>
+                </div>
+              </form>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+
+    <div class="btn-group btn-group-justified">
+      <a href="/events" class="btn btn-primary">
+        <i class="fa fa-chevron-left"></i>
+      </a>
+      <% if current_user.id == @event.user_id %>
+        <a href="/events/<%= @event.id %>/edit" class="btn btn-warning">
+          <i class="fa fa-edit"></i>
+        </a>
+        <a href="/delete_event/<%= @event.id %>" class="btn btn-danger" rel="nofollow">
+          <i class="fa fa-trash-o"></i>
+        </a>
+      <% end %>
+    </div>
+  </div>
+</div>

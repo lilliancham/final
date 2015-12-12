@@ -1,0 +1,91 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+
+  <!-- Validation failure messages -->
+  <% if @event.errors.any? %>
+    <% @event.errors.full_messages.each do |message| %>
+      <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <%= message %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          Add Event
+        </h3>
+      </div>
+
+      <div class = "panel-body">
+      <form action="/create_event" method="post" enctype="multipart/form-data">
+        <!-- Hidden input for authenticity token to protect from forgery -->
+        <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+        <input type="hidden" id="user_id" name="user_id" value="<%= current_user.id %>">
+
+        <!-- Label and input for title -->
+        <div class="form-group">
+          <label for="title" class="control-label">
+            Title
+          </label>
+
+          <input type="text" id="title" name="title" placeholder="Title" class="form-control" value="<%= @event.title %>">
+        </div>
+
+        <!-- Label and input for held_on -->
+          <div class="form-group">
+          <label for="held_on" class="control-label">
+            Date and Time
+          </label>
+
+            <input type="text" class = "form-control" name="held_on" id="held_on" placeholder="Enter Date and Time" value="<%=@event.held_on %>">
+        </div>
+
+        <!-- Label and input for location -->
+        <div class="form-group">
+          <label for="location" class="control-label">
+            Location
+          </label>
+
+          <input type="text" id="location" name="location" placeholder="Location" class="form-control" value="<%= @event.location %>">
+        </div>
+
+        <!-- Label and input for capacity -->
+        <div class="form-group">
+          <label for="capacity" class="control-label">
+            Maximum Capacity
+          </label>
+
+          <input type="text" id="capacity" name="capacity" placeholder="Maximum Number of Attendees" class="form-control" value="<%= @event.capacity %>">
+        </div>
+
+        <!-- Label and input for image -->
+        <div class="form-group">
+          <label for="image" class="control-label">
+            Image
+          </label>
+
+          <input type="text" id="image" name="image" placeholder="Link to a Picture for the Event" class="form-control" value="<%= @event.image %>">
+        </div>
+
+      <!-- Label and input for description -->
+      <div class="form-group">
+        <label for="description" class="control-label">
+          Description
+        </label>
+
+        <textarea id="description" name="description" placeholder="Brief Description of Event..." class="form-control" rows="3"><%= @event.description %></textarea>
+      </div>
+
+
+      <button class="btn btn-success">
+        Create Event
+      </button>
+      or
+      <a href="/events">Cancel</a>
+    </form>
+    </div>
+  </div>
+</div>

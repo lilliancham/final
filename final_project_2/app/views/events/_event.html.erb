@@ -1,0 +1,103 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+        <a href="/events/<%= event.id %>"> <%= event.title %> </a> Organized By <%= link_to event.user.name, "/users/#{event.user.id}" %>
+        </h3>
+      </div>
+
+      <div class="panel-body">
+
+      <% if event.image.present? %>
+      <a href="/events/<%= event.id %>">
+          <img src="<%= event.image %>" class="img-responsive">
+      </a>
+
+      <% end %>
+
+        <dl class="dl-horizontal">
+
+              <dt>Location</dt>
+              <dd><%= event.location %></dd>
+
+              <dt>Held on</dt>
+              <dd><%= event.held_on.strftime('%B %e, %Y at %l:%M%P') %></dd>
+
+              <dt>Description</dt>
+              <dd><%= event.description %></dd>
+
+        </dl>
+
+        <ul class = "list-group">
+
+          <% signup = Signup.find_by(:event_id => event.id, :user_id => current_user.id) %>
+
+          <% if signup.present? && event.held_on >= DateTime.now %>
+            <li class = "list-group-item">
+              <a class="btn btn-default btn-block" href="/delete_signup/<%= signup.id %>" role="button">Cancel Your Reservation</a>
+            </li>
+            <li class ="list-group-item">
+              <%= event.attendees.count %>
+              <%= event.attendees.many? ? "people are" : "person is" %> attending this event.
+
+              <% if event.capacity - event.attendees.count == 1 %>
+                <%= event.capacity - event.attendees.count %> spot remaining!
+              <% else %>
+                <%= event.capacity - event.attendees.count %> spots remaining!
+              <% end %>
+            </li>
+
+          <% else %>
+            <% if event.capacity == event.attendees.count %>
+            <li class = "list-group-item"> This event is at capacity. </li>
+            <% else %>
+              <% if event.held_on >= DateTime.now %>
+              <form action="/create_signup" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+                <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+                <input type="hidden" name="event_id" value="<%= event.id %>">
+                <input type="hidden" name="user_id" value="<%= current_user.id %>">
+                <li class = "list-group-item">
+                  <button class="btn btn-default btn-block"> Sign Up for the Event </button>
+                </li>
+              </form>
+              <% end %>
+
+              <li class = "list-group-item">
+                <% if event.attendees.any? %>
+                  <%= event.attendees.count %>
+                  <%= event.attendees.many? ? "people are" : "person is" %>
+                  attending this event.
+                <% else %>
+                  Be the first to sign up for this event.
+                <% end %>
+
+                <% if event.capacity - event.attendees.count == 1 %>
+                  <%= event.capacity - event.attendees.count %> spot remaining!
+                <% else %>
+                  <%= event.capacity - event.attendees.count %> spots remaining!
+                <% end %>
+              </li>
+            <% end %>
+          <% end %>
+
+          <li class="list-group-item list-group-item-success"> Event Attendees </li>
+            <% event.attendees.each do |attendee| %>
+          <li class="list-group-item">
+            <a href="/users/<%= attendee.id %>">
+              <%= attendee.name %>
+            </a>
+          </li>
+            <% end %>
+
+        </ul>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,17 @@
+<div class="page-header">
+
+  <div class="jumbotron">
+    <div class ="col-md-8 col-md-offset-2">
+      <h3 align = "center">
+        All Events Organized By <%= @user.name %>
+      </h3>
+  </div>
+
+  <div class="row">
+    <div class ="col-md-8 col-md-offset-2">
+      <a href="/events/new" class="btn btn-default btn-block"> <i class = "fa fa-plus"> </i> </a>
+    </div>
+  </div>
+</div>
+
+<%= render @events%>
